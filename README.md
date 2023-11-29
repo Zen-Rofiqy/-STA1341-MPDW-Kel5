@@ -23,7 +23,7 @@ Dataset ini memilki data/peubah :
 Kami akan menggunakan peubah `Adj Close` (Adjusted Close). Data ini dianggap sebagai data yang **paling relevan** untuk analisis jangka panjang, karena mencerminkan harga saham yang sebenarnya setelah penyesuaian. Periode waktu yang kami gunakan yakni periode harian dari tanggal `1 Januari 2021` sampai `10 November 2023`.  
 
 ## Hasil Analisis
-`Link .rmd File` : [MPDW-Kel5.rmd](https://finance.yahoo.com/)  
+`Link .rmd File` : [MPDW-Kel5.rmd](https://github.com/Zen-Rofiqy/-STA1341-MPDW-Kel5/blob/main/MPDW-Kel5.rmd)  
 `Link Rpubs` : https://rpubs.com/ZenR_Prog/MPDW-Hasil-Akhir  
 Analisis data dilakukan menggunakan bantuan software R-Studio yang disimpan pada file `.rmd`. 
 Adapun untuk memudahkan pengguna untuk membaca, kami juga menyediakan link `rpubs` yang sudah diberikan diatas.
