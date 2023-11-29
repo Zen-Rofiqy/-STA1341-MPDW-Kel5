@@ -24,9 +24,9 @@ Kami akan menggunakan peubah `Adj Close` (Adjusted Close). Data ini dianggap seb
 
 ## Hasil Analisis
 `Link .rmd File` : [MPDW-Kel5.rmd](https://github.com/Zen-Rofiqy/-STA1341-MPDW-Kel5/blob/main/MPDW-Kel5.rmd)  
-`Link Rpubs` : https://rpubs.com/ZenR_Prog/MPDW-Hasil-Akhir  
+`Link Html` : [MPDW-Kel5.html](https://github.com/Zen-Rofiqy/-STA1341-MPDW-Kel5/blob/main/MPDW-Kel5.html)  
 Analisis data dilakukan menggunakan bantuan software R-Studio yang disimpan pada file `.rmd`. 
-Adapun untuk memudahkan pengguna untuk membaca, kami juga menyediakan link `rpubs` yang sudah diberikan diatas.
+Adapun untuk memudahkan pengguna untuk membaca, kami juga menyediakan link `Html` yang sudah diberikan diatas.
 
 
 ### Mengetahui Dosen dan Asisten Praktikum
