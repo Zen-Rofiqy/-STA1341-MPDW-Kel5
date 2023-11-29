@@ -8,9 +8,9 @@
 | `G1401211098` |   Fajryanti   Kusuma Wardani  | [fajryanti](http://github.com/fajryanti)            |
 
 ### Dosen dan Asisten Praktikum
-|      **NIM/NRP**     |             **Nama**            | **GitHub**                                           | **Tipe Peubah** |
-|:--------------------:|:-------------------------------:|------------------------------------------------------|:---------------:|
-| `197805112007012001` | Dr. Yenni Angraini S.Si., M.Si. | [yenniangraini](https://github.com/yenniangraini)    |     Numerik     |
-| `198910272015042004` |    Akbar Rizki S.Stat., M.Si.   | [4riz](https://github.com/4riz)                      |     Numerik     |
-|      `G14190001`     |     Adelia Putri Pangestika     | [adeliaaaputri](https://github.com/adeliaaaputri)    |     Numerik     |
-|      `G14190022`     |    Muhammad Rizky Nurhambali    | [rizkynurhambali](http://github.com/rizkynurhambali) |     Numerik     |
+|      **NIM/NRP**     |             **Nama**            | **GitHub**                                           |
+|:--------------------:|:-------------------------------:|------------------------------------------------------|
+| `197805112007012001` | Dr. Yenni Angraini S.Si., M.Si. | [yenniangraini](https://github.com/yenniangraini)    |
+| `198910272015042004` |    Akbar Rizki S.Stat., M.Si.   | [4riz](https://github.com/4riz)                      |
+|      `G14190001`     |     Adelia Putri Pangestika     | [adeliaaaputri](https://github.com/adeliaaaputri)    |
+|      `G14190022`     |    Muhammad Rizky Nurhambali    | [rizkynurhambali](http://github.com/rizkynurhambali) |
