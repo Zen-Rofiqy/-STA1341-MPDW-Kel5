@@ -9,7 +9,7 @@
   
 ## Data
 `Sumber Data` : [finance.yahoo.com](https://finance.yahoo.com/)  
-`Link Dataset` : [Dataset MPDW Kelompok 5](https://finance.yahoo.com/)  
+`Link Dataset` : [Dataset MPDW Kelompok 5](https://github.com/Zen-Rofiqy/-STA1341-MPDW-Kel5/blob/main/Dataset%20MPDW%20Kelompok%205.csv)  
 > Dataset yang kami gunakan merupakan data harga saham historis periode 1 Januari 2018 hingga 10 November 2023 dari 6 saham yakni saham saingan NVDA seperti AMD, ARM, AVGO, TSM, dan INTC.  
 
 Dataset ini memilki data/peubah :
