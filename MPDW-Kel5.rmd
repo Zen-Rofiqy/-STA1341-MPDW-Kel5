@@ -61,12 +61,6 @@ export.chart <- "C:/Users/Fathan/Documents/Obsidian Vault/2. Kuliah/Smt 5/6. Met
 
 # Pendahuluan
 
-## Dataset
-
-![](https://miro.medium.com/v2/resize:fit:1400/1*2Yt3-zcGKc6MYuXCxgCL0A.jpeg)
-
-dari tujuh raksasa teknologi paling berpengaruh di dunia: Microsoft, Apple, Amazon, Nvidia, Google, Netflix, dan Meta (sebelumnya dikenal sebagai Facebook). Dataset ini menjadi sumber daya berharga bagi analis keuangan, ilmuwan data, dan penggemar pasar saham yang ingin menganalisis dan memahami tren harga perusahaan-perusahaan terkemuka di industri ini.
-
 ## NVIDIA
 
 ![](images/loxyp6hzr4dufbf8qr_NVDA%20saham%20as.png)
@@ -324,7 +318,7 @@ theme.ts1 <- list(
         )
 ```
 
-### MAANG
+### AAANTI
 
 Melihat keseluruhan *Time Series* data saham.
 
@@ -478,7 +472,7 @@ Ringkasan Data `Ajd CLose.`
 summary(nvda.ts)
 ```
 
-```{r fig.align=, fig.height=12, fig.width=27, message=FALSE, warning=FALSE, dpi=300}
+```{r fig.align="center", fig.height=12, fig.width=27, message=FALSE, warning=FALSE, dpi=300}
 install_load('ggtext')
 min_value <- min(nvda$`Adj Close`)
 min_date <- nvda$Date[which.min(nvda$`Adj Close`)]
@@ -570,7 +564,7 @@ train_nvda.ts <- ts(train_nvda[,3])
 test_nvda.ts <- ts(test_nvda[,3])
 ```
 
-```{r fig.align=, fig.height=12, fig.width=27, message=FALSE, warning=FALSE, dpi=300}
+```{r fig.align="center", fig.height=12, fig.width=27, message=FALSE, warning=FALSE, dpi=300}
 chart <-
 ggplot() + 
   #Label Data Asli 
@@ -878,6 +872,85 @@ Setelah melalui proses transformasi, gambar dan tabel di atas mengindikasikan ba
 ragam <- data.frame(
   Date = train_nvda %>% dplyr::select(Date)  ,
   `Asli` = c(as.vector(train_nvda.ts) ),
+  `Trans` = c(as.vector(train_nvda.ts.new) ) ,
+  Name = rep(c("NVDA"), 
+              each = nrow(train_nvda) )
+)
+colnames(ragam) <- c("Date", "Asli", "Trans", "Name")
+```
+
+```{r dpi=300,  fig.height = 12, fig.width = 28, fig.align = "center", warning=FALSE, message = FALSE}
+chart <- 
+ggplot() +
+# Akhir data
+  geom_vline( #Buat garis batas data
+    xintercept = as.numeric(as.Date( max(train_nvda$Date) )), 
+             linetype = "dotted", color = "red") +
+
+#Time Series
+  #Data Transformasi
+  geom_line(data = ragam, linewidth=2,
+            aes(x = Date, y = `Trans`, col = "Trans")) +
+
+  scale_colour_manual(values = c("Trans"=col.nvda[1])) +
+  theme.ts + #THeme
+  labs(x = "\nPeriode (Tahun)", y='Harga Saham (USD)',
+       title = "Plot Transformasi NVDA",
+       subtitle = "Pola deret waktu hasil Transformasi\n") +
+  #Axis
+    coord_cartesian(clip = "off"
+  ) +
+    scale_x_date( #Sumbu x
+    date_breaks = "1 year",  # Menampilkan label setiap tahun
+    date_labels = "%Y",  # Format label tahun
+    limits = c(as.Date(min(ragam$Date)), 
+               as.Date(max(ragam$Date)) + 80)
+  ) +
+    scale_y_continuous( #Sumbu y
+    labels = scales::dollar_format(prefix = "$") #tambahin dolar
+  ) +
+  ylim(min(ragam$Trans), max(ragam$Trans)) +
+
+# Data Transformasi
+  geom_segment(aes(x = as.Date(max(train_nvda$Date)), 
+                   xend = as.Date(max(train_nvda$Date)) + 60, 
+                   y = ragam$Trans[nrow(ragam)], 
+                   yend = ragam$Trans[nrow(ragam)] ), 
+               arrow = arrow(type = "closed", length = unit(.1, "inches")), 
+               lineend = "round", color = "#D02A49", size=1.5) +
+  geom_richtext(
+    data = data.frame(x = as.Date(max(train_nvda$Date)) +60, 
+                      y = ragam$Trans[nrow(ragam)], 
+                      label = "Transformasi" ),
+    aes(x, y, label = label), size = 8, color = "white", 
+    fill = "#D02A49", box.color = "white", parse = TRUE
+  ) +
+  
+#Tanggal akhir
+  geom_segment(aes(x = as.Date(max(train_nvda$Date)), 
+                   xend = as.Date(max(train_nvda$Date)), 
+                   y = -Inf, 
+                   yend = max(ragam$Trans)*.15), 
+               arrow = arrow(type = "closed", length = unit(.1, "inches")), 
+               lineend = "round", color = "gray60", size=1.5) +
+  geom_richtext(
+    data = data.frame(x = as.Date(max(train_nvda$Date)), 
+                      y = max(ragam$Trans)*.15, 
+                      label = max(train_nvda$Date) ),
+    aes(x, y, label = label), size = 8, color = "white", 
+    fill = "gray60", box.color = "white", parse = TRUE
+  )
+
+chart
+#Export Chart
+ggsave("03_Stas_4_Transform_1.png", chart, path = export.chart,
+        dpi = 300, height = 12, width = 28)
+```
+
+```{r}
+ragam <- data.frame(
+  Date = train_nvda %>% dplyr::select(Date)  ,
+  `Asli` = c(as.vector(train_nvda.ts) ),
   `Trans` = c(as.vector(train_nvda.ts.new) ) *3000,
   Name = rep(c("NVDA"), 
               each = nrow(train_nvda) )
@@ -967,7 +1040,7 @@ ggplot() +
 
 chart
 #Export Chart
-ggsave("03_Stas_4_Transform.png", chart, path = export.chart,
+ggsave("03_Stas_4_Transform_2.png", chart, path = export.chart,
         dpi = 300, height = 12, width = 27)
 ```
 
@@ -1137,9 +1210,9 @@ Referensi : [[University of South Carolina] Chapter 6: Model Specification for T
 
 Sebagai contoh :
 
-![](images/Screenshot%202023-10-15%20234003-01.png)
+![](images/Screenshot%202023-12-02%20060410.png){width="296"}
 
-Dalam hal ini model tentatif yang terbentuk adalah ARIMA(0,1,1), ARIMA(1,1,1), ARIMA(2,1,2), ARIMA(3,1,3), dst.. Namun karena kemungkinannya sangat banyak, maka akan digunakan function agar menyingkat proses.
+Dalam hal ini model tentatif yang terbentuk adalah ARIMA(0,1,0), ARIMA(1,1,1), ARIMA(2,1,2), ARIMA(3,1,3), dst.. Namun karena kemungkinannya sangat banyak, maka akan digunakan function agar menyingkat proses.
 
 Pemilihan model ARIMA terbaik dilakukan ketika memiliki nilai **AIC** yang terkecil, **Semua Parameter Signifikan**, dan **Tidak ada Parameter NA**. Kami akan mencoba untuk menggunakan function pemodelam model ARIMA berdasarkan tabel EACF. Namun dengan melakukan 2 pemodelan perbaris AR(p) nya, agar sekalian overfitting.
 
@@ -1166,8 +1239,9 @@ model_tentatif <- function(data, p_max, d, q_max, alpha=0.05, drift=FALSE) {
         if (eacf_result$symbol[p + 1, q ] == "o" && 
             eacf_result$symbol[p + 1, q + 1] == "o" && 
             eacf_result$symbol[p + 2, q + 1] == "o") {
+          if(q-1 == 0) next
       
-          model <- Arima(data, order=c(p,d,q), method="ML", 
+          model <- Arima(data, order=c(p,d,q-1), method="ML", 
                          include.drift=drift)
           aic <- AIC(model)
           
@@ -1193,7 +1267,7 @@ model_tentatif <- function(data, p_max, d, q_max, alpha=0.05, drift=FALSE) {
           }
           
           models <- rbind(models, 
-                    data.frame(Model = paste("ARIMA(", p, ",", d, ",", q, ")", 
+                    data.frame(Model = paste("ARIMA(", p, ",", d, ",", q-1, ")", 
                                              sep = ""), 
                                AIC = aic, 
                                Signif = paste(significant_params, 
@@ -1230,7 +1304,7 @@ datatable(model.tentaif_nvda, filter = 'top',
           options = list(pageLength = 7))
 ```
 
-Berdasarkan pendugaan parameter di atas, nilai AIC terkecil $-8917.35$ dimiliki oleh model `ARIMA(0,1,1)` dan seluruh parameternya signifikan sehingga model yang dipilih adalah model `ARIMA(0,1,1)`.
+Berdasarkan pendugaan parameter di atas, nilai AIC terkecil $-8917.36$ dimiliki oleh model `ARIMA(0,1,1)` dan seluruh parameternya signifikan sehingga model yang dipilih adalah model `ARIMA(0,1,1)`.
 
 ```{r}
 model_nvda.da <- Arima(train_nvda.diff, order=c(0,1,1), method="ML")
@@ -1251,7 +1325,7 @@ datatable(drift1_nvda, filter = 'top',
           options = list(pageLength = 7))
 ```
 
-Berdasarkan pendugaan parameter di atas, nilai AIC terkecil $5063.53$ dimiliki oleh model `ARIMA(4,1,4)` dan seluruh parameternya signifikan sehingga model yang dipilih adalah model `ARIMA(4,1,4)`.
+Berdasarkan pendugaan parameter di atas, nilai AIC terkecil $5063.29$ dimiliki oleh model `ARIMA(4,1,4)` dan seluruh parameternya signifikan sehingga model yang dipilih adalah model `ARIMA(4,1,4)`.
 
 ```{r}
 model_nvda.drift1 <- Arima(train_nvda.ts, order=c(4,1,4), method="ML")
@@ -1357,17 +1431,11 @@ Overfitting dilakukan dilakukan dengan menaikkan orde **AR(p)** dan **MA(q)** da
 Perlu diingat bahwa sebelumnya saya menjelaskan bahwa fungsi `model_tentatif` yang kami buat itu sudah sekaligus overfitting, dan itu juga sudah membandingkan mana model terbaiknya. Sehingga sebenarnya tidak perlu dilakukan overfitting. Namun saya akan tunjukkan kembali.
 
 ```{r}
-datatable(model.tentaif_nvda, filter = 'top', 
-          options = list(pageLength = 2))
+datatable(head(model.tentaif_nvda, 3), filter = 'top', 
+          options = list(pageLength = 3))
 ```
 
-Terlihat bahwa hanya terdapat model `ARIMA(0,1,2)` saja. Itu dikarenakan model `ARIMA(1,1,1)` tidak tersedia di Tabel EACF, sehingga perlu dilakukan manual.
-
-```{r}
-Arima(train_nvda.diff, order=c(1,1,1), method="ML") %>% summary() 
-```
-
-memiliki **AIC** yang lebih besar dan tidak semua parameternya signifikan. Sehingga tetap model terbaiknya adalah `ARIMA(0,1,1)`.
+Terlihat bahwa hanya terdapat model `ARIMA(0,1,2)` dan `ARIMA(1,1,1)` tidak jauh lebih baik daripada model `ARIMA(0,1,1)` .
 
 ```{r}
 arima.best_model_nvda <- model_nvda.da
@@ -1708,13 +1776,13 @@ arch.garch <- function(data, pp, qq = 0, arma.order = c(0, 0), mean=FALSE) {
 > Model ARCH tanpa Intersep
 
 ```{r}
-model.arch <- arch.garch(data = train_nvda.diff, pp = 12, qq = 0, arma.order = arma.order)
-datatable(model.arch$arch.model, filter = 'top', 
+model.arch1 <- arch.garch(data = train_nvda.diff, pp = 12, qq = 0, arma.order = arma.order)
+datatable(model.arch1$arch.model, filter = 'top', 
           options = list(pageLength = 6))
 ```
 
 ```{r}
-cat("Best Model:", model.arch$best_model)
+cat("Best Model:", model.arch1$best_model)
 ```
 
 Setelah mencoba iterasi lag 1 sampai lag 12, terlihat bahwa hanya ada satu model yang semua parameternya signifikan yakni **ARCH(1).** Karena itu tidak perlu membandingkan nilai **AIC**. Sehingga model terbaik adalah **ARIMA(0,1,1)+ARCH(1).**
@@ -1722,14 +1790,14 @@ Setelah mencoba iterasi lag 1 sampai lag 12, terlihat bahwa hanya ada satu model
 > Model ARCH dengan intersep
 
 ```{r}
-model.arch <- arch.garch(data=train_nvda.diff, pp=12, qq=0, arma.order=arma.order,
+model.arch2 <- arch.garch(data=train_nvda.diff, pp=12, qq=0, arma.order=arma.order,
                          mean=TRUE)
-datatable(model.arch$arch.model, filter = 'top', 
+datatable(model.arch2$arch.model, filter = 'top', 
           options = list(pageLength = 6))
 ```
 
 ```{r}
-cat("Best Model:", model.arch$best_model)
+cat("Best Model:", model.arch2$best_model)
 ```
 
 Sama seperti model ARCH tanpa intersep, model terbaiknya adalah ARCH(1).
@@ -1804,7 +1872,7 @@ Sehingga diperoleh model terbaik yakni **ARIMA(0,1,1)+ARCH(1)**.
 plot(model.arch_nvda1, which="all")
 ```
 
-Diperoleh mean model yaitu **ARIMA(0,1,1)** dan varian model yaitu **ARCH(1)** untuk digunakan dalam peralaman, pada uji dignostik model pada plot QQ-norm terlihat bahwa sebaran residual tidak mengikuti garis lurus sehingga dapat disimpulkan bahwa **residual tidak menyebar normal,** lalu untuk uji autokorelasi dapat dilihat plot ACF squared residual telah terlihat bahwa setiap lag berada dibawah batas, sehingga dapat dikatakan bahwa **ada autokorelasi antar residual**, diperkuat dengan nilai p-value pada uji L-jung Box yang lebih besar dari alpha=0.05.
+Diperoleh mean model yaitu **ARIMA(0,1,1)** dan varian model yaitu **ARCH(1)** untuk digunakan dalam peralaman, pada uji dignostik model pada plot QQ-norm terlihat bahwa sebaran residual tidak mengikuti garis lurus sehingga dapat disimpulkan bahwa **residual tidak menyebar normal.**
 
 ```{r, include=FALSE, echo=FALSE}
 #Export Chart
@@ -2113,7 +2181,7 @@ row.names(akurasi.nvda) <- "ARIMA"
 akurasi.nvda.arch1 <- accuracy(ts(ramal_nvda.arch1[-1]), 
                          head(test_nvda.ts, n=nrow(test_nvda) )) %>%
   as.data.frame() %>%
-  cbind(Model = model.arch$best_model) %>% 
+  cbind(Model = model.arch1$best_model) %>% 
   relocate(Model, .before = 1)
 row.names(akurasi.nvda.arch1) <- "ARCH+Intersep"
 
@@ -2121,7 +2189,7 @@ row.names(akurasi.nvda.arch1) <- "ARCH+Intersep"
 akurasi.nvda.arch2 <- accuracy(ts(ramal_nvda.arch2[-1]), 
                          head(test_nvda.ts, n=nrow(test_nvda) )) %>%
   as.data.frame() %>%
-  cbind(Model = model.arch$best_model) %>% 
+  cbind(Model = model.arch2$best_model) %>% 
   relocate(Model, .before = 1)
 row.names(akurasi.nvda.arch2) <- "ARCH-Intersep"
 ```
@@ -2139,7 +2207,7 @@ datatable(akurasi, filter = 'top',
           options = list(pageLength = 7))
 ```
 
-Dari tabel diatas terlihat bahwa model **ARIMA(0,1,1)** berkatergori *"Baik"* dengan nilai **MAPE** nya sebesar $12.3\%$ (kurang dari $20\%$).
+Dari tabel diatas terlihat bahwa model **ARIMA(0,1,1)-ARCH(1) dengan Intersep** berkatergori *"Baik"* dengan nilai **MAPE** nya sebesar $15.64\%$ (kurang dari $20\%$).
 
 # Peramalan
 
@@ -2293,29 +2361,6 @@ colnames(data_ramal) <- c("Date", "Adj Close", "BB", "BA", "Name")
 
 ## Plot
 
-```{r fig.align="center", fig.height=6, fig.width=11, message=FALSE, warning=FALSE, dpi=300}
-plot(ramalan_nvda, which= 1)
-```
-
-```{r fig.align="center", fig.height=6, fig.width=11, message=FALSE, warning=FALSE, dpi=300}
-ts.plot(ramalan_nvda@forecast$sigmaFor)
-ts.plot(ramalan_nvda@forecast$seriesFor)
-ts.plot(-ramalan_nvda@forecast$sigmaFor)
-```
-
-```{r dpi=300,  fig.height = 12, fig.width = 27, fig.align = "center", warning=FALSE, message = FALSE}
-ggplot()+
-  #BB
-  geom_line(data = data_ramal, linewidth=2,
-            aes(x = Date, y = `BB`, col = "Atas")) +
-  #BA
-  geom_line(data = data_ramal, linewidth=2,
-            aes(x = Date, y = `BA`, col = "Bawah")) +
-    geom_line(data = data_ramal, linewidth=2,
-            aes(x = Date, y = `Adj Close`, col = "NVDA")) 
-
-```
-
 ```{r dpi=300,  fig.height = 12, fig.width = 27, fig.align = "center", warning=FALSE, message = FALSE}
 harga_akhir <- nvda$`Adj Close`[nrow(nvda)]
 harga_ramal <- data_ramal$`Adj Close`[nrow(data_ramal)]
@@ -2449,6 +2494,8 @@ ggsave("07_Ramalan.png", chart, path = export.chart,
         dpi = 300, height = 12, width = 27)
 ```
 
+Model **ARIMA(0,1,1)-ARCH(1)** dengan intersep digunakan untuk meramalkan hingga periode akhir tahun 2023. Pada Gambar 12 terlihat bahwa adjusted close saham NVIDIA diramalkan akan menyentuh angka seharga 555,95 USD atau naik sebesar $15,02\%$ hingga akhir tahun 2023.
+
 # Penutup
 
 ```{r, warning=FALSE, message = FALSE}
@@ -2459,24 +2506,17 @@ write.xlsx(list("Tentatif" = model.tentaif_nvda,
                 "Drift1" = drift1_nvda,
                 "Drift2" = drift2_nvda,
                 "Drift3" = drift3_nvda,
-                "Drift4" = drift4_nvda
+                "Drift4" = drift4_nvda,
+                "Arch-Intersep" = model.arch1$arch.model, 
+                "Arch+Intersep" = model.arch2$arch.model, 
+                "Garch" = model.garch$arch.model
                 ), 
            file = "Model_NVDA.xlsx")
 ```
 
 ## Kesimpulan
 
-karena dengan jika menggunakan model ARCH lag hingga 5 masih signifikan, lalu, dicobakan pada beberapa model GARCH dan dibandingkan nilai-nilai seperti AIC dan signifikansi parameter, maka akan digunakan model GARCH(1,2) yang memiliki nilai AIC kecil dan parameter yang hampir semua signifikan. Sehingga diperoleh model Mean yaitu ARIMA(0,1,2) dan model Varian yaitu GARCH(1,2).Dengan persamaan sebagai berikut :
-
-*Mean Model* ARIMA(0,1,2)
-
-Yt=0.0771+et−0.0192et−1−0.0460et−2��=0.0771+��−0.0192��−1−0.0460��−2
-
-*Varian Model*
-
-GARCH(1,2)
-
-σ2t=0.0829+0.0708ϵ2t−1+0.0057σ2t−1+0.9224σ2t−2
+Kesimpulan yang dapat ditarik pada penelitian ini adalah model **ARIMA(0,1,1)-ARCH(1)** **dengan intersep** merupakan model terbaik yang dapat meramalkan adjusted close saham NVIDIA dalam kurung waktu 11 November 2023 hingga 31 Desember 2023. Nilai MAPE yang didapatkan dari model terbaik adalah sebesar $15.64\%$. Adjusted close saham NVIDIA diramalkan akan naik hingga menyentuh angka $555.96$ USD atau naik sebesar $15.02\%$. Hal ini menunjukkan bahwa jika ingin membeli saham harian NVIDIA pada kurung waktu 11 November 2023 hingga 31 Desember 2023 merupakan hal yang tepat dikarenakan saham akan naik.
 
 ## Referensi
 
